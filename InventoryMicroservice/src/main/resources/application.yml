@@ -1,0 +1,55 @@
+server:
+  port: 8088
+
+topic:
+  name: item.sales.topic
+  ack: ack.inventory.topic
+
+
+#spring.kafka.consumer.properties.spring.json.trusted.packages=*
+#spring.json.trusted.packages: "com.sample.project.model.Sales"
+
+spring:
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: inventory
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ikechi
+    password: ikechi
+    url: jdbc:postgresql://localhost:5432/inventory_db?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&serverTimezone=UTC
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    generate-ddl: true
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      platform: postgres
+
+  application:
+    name: sample-project-kafka
